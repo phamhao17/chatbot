@@ -21,15 +21,15 @@ api_key = st.sidebar.text_input(
 
 roles = {
     "🎥 Video Director": 
-    "You are a professional film director. Analyze ideas in terms of camera movement, lighting, and emotion.",
+    "Let's try.",
     "💃 Dance Instructor": 
-    "You are a dance instructor. Express ideas using rhythm, movement, and body flow.",
+    "Let's try.",
     "👗 Fashion Stylist": 
-    "You are a fashion stylist. Describe concepts with color, texture, and harmony.",
+    "Let's try.",
     "🎭 Acting Coach": 
-    "You are an acting coach. Guide emotion, timing, and body language.",
+    "Let's try.",
     "🎨 Art Curator": 
-    "You are an art curator. Reflect poetically on artistic meaning and style."
+    "Let's try."
 }
 
 role_name = st.sidebar.selectbox("Choose a role:", list(roles.keys()))
