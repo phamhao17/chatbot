@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import openai
 
 # -----------------------
 # Page Configuration
@@ -13,29 +13,23 @@ st.write("Select a creative role and ask your question!")
 # -----------------------
 st.sidebar.header("🔑 API & Role Settings")
 
-# API key input
 api_key = st.sidebar.text_input(
     "Enter your OpenAI API Key:",
     type="password",
     placeholder="sk-xxxxxxxxxxxxxxxx",
 )
 
-# Role definitions
 roles = {
     "🎥 Video Director": 
-    "You are a professional film director. Always analyze ideas in terms of visual storytelling — use camera movement, lighting, framing, and emotional tone to explain your thoughts. Describe concepts as if you are planning a film scene.",
-
+    "You are a professional film director. Analyze ideas in terms of camera movement, lighting, and emotion.",
     "💃 Dance Instructor": 
-    "You are a dance instructor. Always respond using movement and rhythm metaphors. Translate ideas into body motion, choreography, and stage presence. Think in terms of energy, flow, and physical expression.",
-    
+    "You are a dance instructor. Express ideas using rhythm, movement, and body flow.",
     "👗 Fashion Stylist": 
-    "You are a fashion stylist. Explain every idea using the language of color, texture, and silhouette. Think visually — how something would appear, feel, and harmonize.",
-    
+    "You are a fashion stylist. Describe concepts with color, texture, and harmony.",
     "🎭 Acting Coach": 
-    "You are an acting coach. Speak as if guiding an actor through emotion and timing. Use scene examples, emotional layering, and body language descriptions.",
-    
+    "You are an acting coach. Guide emotion, timing, and body language.",
     "🎨 Art Curator": 
-    "You are an art curator. Reflect in an analytical yet poetic tone. Compare artistic elements, styles, and their emotional effects as if curating an exhibition."
+    "You are an art curator. Reflect poetically on artistic meaning and style."
 }
 
 role_name = st.sidebar.selectbox("Choose a role:", list(roles.keys()))
@@ -61,9 +55,10 @@ if st.button("Generate Response"):
         st.warning("Please enter a question first!")
     else:
         try:
-            client = OpenAI(api_key=api_key)
+            openai.api_key = api_key
+
             with st.spinner("AI is thinking..."):
-                response = client.chat.completions.create(
+                response = openai.ChatCompletion.create(
                     model="gpt-4o-mini",
                     messages=[
                         {"role": "system", "content": role_description},
@@ -71,17 +66,14 @@ if st.button("Generate Response"):
                     ]
                 )
 
-                answer = response.choices[0].message.content
+            answer = response.choices[0].message["content"]
 
-                # Display the system prompt + answer
-                st.success(f"🎬 {role_name} says:")
-                with st.expander("📜 Show Prompt Used by AI"):
-                    st.markdown(f"**System Prompt:**\n\n> {role_description}")
-                    st.markdown("---")
-                    st.markdown(f"**User Question:**\n\n> {user_input}")
+            st.success(f"🎬 {role_name} says:")
+            st.write(answer)
 
-                st.markdown("### 💡 AI’s Response")
-                st.write(answer)
+            with st.expander("📜 Show Prompt Used by AI"):
+                st.markdown(f"**System Prompt:** {role_description}")
+                st.markdown(f"**User Question:** {user_input}")
 
         except Exception as e:
             st.error(f"Error: {e}")
@@ -90,4 +82,4 @@ if st.button("Generate Response"):
 # Footer
 # -----------------------
 st.markdown("---")
-st.caption("Built for *Art & Advanced Big Data* • Hao Pham Thi")
+st.caption("Built for *Art & Advanced Big Data* • Prof. Jahwan Koo (SKKU)")
